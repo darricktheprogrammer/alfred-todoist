@@ -2,7 +2,7 @@
 import pytest
 
 
-from alfredtodoist import alfredtodoist
+from alfredtodoist import api
 
 
 def test_alfredtodoist_Given_Returns():
