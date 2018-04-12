@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Command line entry point into alfredtodoist.
+Command line entry point into AlfredTodoist.
 
 More details...
 """

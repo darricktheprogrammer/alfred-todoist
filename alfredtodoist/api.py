@@ -1,5 +1,5 @@
 """
-Docstring for main module in alfredtodoist.
+Docstring for main module in AlfredTodoist.
 
 A longer description...
 """

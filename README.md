@@ -1,4 +1,4 @@
-alfredtodoist
+AlfredTodoist
 =============
 
 Placeholder text for short description
