@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
 import pytest
 
 # Example inputs:
@@ -47,3 +48,20 @@ class TestParsingLabels():
 		task = 'pick up groceries'
 		parsed = self.parser.parse(task)
 		assert len(parsed['labels']) == 0
+
+	def test_Parse_GivenLabelWithUnderscore_ReturnsLabel(self):
+		task = 'pick up groceries @on_the_go'
+		parsed = self.parser.parse(task)
+		assert parsed['labels'] == ['on_the_go']
+
+	@pytest.mark.xfail(strict=True)
+	def test_Parse_GivenLabelWithUnicode_ReturnsLabel(self):
+		task = 'pick up groceries @grøcery'
+		parsed = self.parser.parse(task)
+		assert parsed['labels'] == ['grøcery']
+
+	@pytest.mark.xfail(strict=True)
+	def test_Parse_GivenLabelWithEmoji_ReturnsLabel(self):
+		task = 'pick up groceries @📱phone'
+		parsed = self.parser.parse(task)
+		assert parsed['labels'] == ['📱phone']

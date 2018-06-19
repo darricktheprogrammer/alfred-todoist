@@ -7,7 +7,7 @@ import re
 
 
 class TaskParser:
-	label_regex = r'(?<=@)[a-zA-Z0-9_-]+'
+	label_regex = r'(?<=@)\w+'
 
 	def _pop_labels(self, text):
 		labels = [g for g in re.findall(self.label_regex, text)]
