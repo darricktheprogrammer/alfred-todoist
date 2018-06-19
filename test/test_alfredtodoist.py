@@ -65,3 +65,23 @@ class TestParsingLabels():
 		task = 'pick up groceries @📱phone'
 		parsed = self.parser.parse(task)
 		assert parsed['labels'] == ['📱phone']
+
+
+class TestParsingPriority():
+	def setup_method(self):
+		self.parser = api.TaskParser()
+
+	def test_Parse_ExclamationPointPriorityFormat_ParsesNumber(self):
+		task = 'pick up groceries !!1'
+		parsed = self.parser.parse(task)
+		assert parsed['priority'] == '1'
+
+	def test_Parse_PPriorityFormat_ParsesNumber(self):
+		task = 'pick up groceries p1'
+		parsed = self.parser.parse(task)
+		assert parsed['priority'] == '1'
+
+	def test_Parse_NoPriority_ReturnsEmptyPriority(self):
+		task = 'pick up groceries'
+		parsed = self.parser.parse(task)
+		assert parsed['priority'] == ''
