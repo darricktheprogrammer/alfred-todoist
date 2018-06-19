@@ -105,3 +105,29 @@ class TestParsingProject():
 		task = 'pick up groceries #shopping !!3 @errands @grocery'
 		parsed = self.parser.parse(task)
 		assert parsed['project'] == 'shopping'
+
+
+class TestParsingDueDate():
+	def setup_method(self):
+		self.parser = api.TaskParser()
+
+	def test_Parse_WithOnlyDueDate_ParsesDueDate(self):
+		task = 'pick up groceries due:tonight'
+		parsed = self.parser.parse(task)
+		assert parsed['due'] == 'tonight'
+
+	def test_Parse_MultiWordDueDate_ParsesDueDate(self):
+		task = 'pick up groceries due:every monday starting on the first'
+		parsed = self.parser.parse(task)
+		assert parsed['due'] == 'every monday starting on the first'
+
+	def test_Parse_WithSpaceAfterColon_ParsesDueDate(self):
+		task = 'pick up groceries due: next week'
+		parsed = self.parser.parse(task)
+		assert parsed['due'] == 'next week'
+
+	def test_Parse_WithLabelAfter_ParsesBoth(self):
+		task = 'pick up groceries due: next week @errands'
+		parsed = self.parser.parse(task)
+		assert parsed['due'] == 'next week'
+		assert parsed['labels'] == ['errands']

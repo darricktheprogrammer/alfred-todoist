@@ -36,12 +36,24 @@ class TaskParser:
 			project_name = ''
 		return project_name, text
 
+	def _pop_due_date(self, text):
+		try:
+			due_index = text.index('due:')
+			start = due_index + len('due:')
+			due_date = text[start:].strip()
+			text = text.replace('due:' + due_date, '')
+		except ValueError:
+			due_date = ''
+		return due_date, text
+
 	def parse(self, text):
 		labels, text = self._pop_labels(text)
 		priority, text = self._pop_priority(text)
 		project, text = self._pop_project(text)
+		due, text = self._pop_due_date(text)
 		return {
 			'labels': labels,
 			'priority': priority,
-			'project': project
+			'project': project,
+			'due': due,
 		}
