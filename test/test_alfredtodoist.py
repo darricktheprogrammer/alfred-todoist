@@ -85,3 +85,23 @@ class TestParsingPriority():
 		task = 'pick up groceries'
 		parsed = self.parser.parse(task)
 		assert parsed['priority'] == ''
+
+
+class TestParsingProject():
+	def setup_method(self):
+		self.parser = api.TaskParser()
+
+	def test_Parse_WithOnlyProject_ParsesProject(self):
+		task = 'pick up groceries #shopping'
+		parsed = self.parser.parse(task)
+		assert parsed['project'] == 'shopping'
+
+	def test_Parse_WithoutProject_EmptyProjectReturned(self):
+		task = 'pick up groceries'
+		parsed = self.parser.parse(task)
+		assert parsed['project'] == ''
+
+	def test_Parse_WithoutProjectLabelAndPriority_ParsesCorrectly(self):
+		task = 'pick up groceries #shopping !!3 @errands @grocery'
+		parsed = self.parser.parse(task)
+		assert parsed['project'] == 'shopping'
