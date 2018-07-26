@@ -80,4 +80,5 @@ class TaskParser:
 			'project': project,
 			'due': due,
 			'notes': notes,
+			'todo': text.strip()
 		}

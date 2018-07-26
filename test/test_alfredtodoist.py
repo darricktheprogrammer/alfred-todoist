@@ -2,31 +2,6 @@
 # -*- coding: utf-8 -*-
 import pytest
 
-# Example inputs:
-# pick up groceries
-# pick up groceries !!1
-# pick up groceries p1
-# pick up groceries !!1 @errands
-# pick up groceries @on_the_go
-# pick up groceries p:single actions
-# pick up groceries p:groceries
-# devtodo pick up groceries !!1 @errands due:tomorrow note:check the grocery list note:check it twice
-# pick up groceries !!1 p:groceries @errands due: tomorrow
-# pick up groceries !!1 p:groceries @errands due: next week
-# pick up groceries !!1 p:groceries @errands due:next week note:check the grocery list
-# pick up groceries !!1 p:groceries @errands due:tomorrow note:check the grocery list note:check it twice
-# pick up groceries !!1 p:groceries @errands note: check the grocery list
-# pick up groceries note: check the grocery list
-# pick up groceries #single actions
-# pick up groceries #groceries
-# pick up groceries !!1 #groceries @errands due: tomorrow
-# pick up groceries !!1 #groceries @errands due: next week
-# pick up groceries !!1 #groceries @errands due: next week note: check the grocery list
-# pick up groceries !!1 #groceries @errands due: tomorrow note: check the grocery list
-# pick up groceries !!1 #groceries @errands note: check the grocery list
-# pick up groceries !!1 #stuff for the house @errands note: check the grocery list
-
-
 from alfredtodoist import api
 
 
@@ -106,6 +81,12 @@ class TestParsingProject():
 		parsed = self.parser.parse(task)
 		assert parsed['project'] == 'shopping'
 
+	@pytest.mark.xfail(strict=True)
+	def test_Parse_MultiWordProject_ParsesCorrectly(self):
+		task = 'pick up groceries #grocery shopping !!3 @errands @grocery'
+		parsed = self.parser.parse(task)
+		assert parsed['project'] == 'grocery shopping'
+
 
 class TestParsingDueDate():
 	def setup_method(self):
@@ -171,3 +152,47 @@ class TestParsingNotes():
 		task = '# pick up groceries !!1 #groceries @errands note: check the grocery list note: check it again due: next week'
 		parsed = self.parser.parse(task)
 		assert parsed['notes'] == ['check the grocery list', 'check it again']
+
+
+class TestTodoTextParsing():
+	def setup_method(self):
+		self.parser = api.TaskParser()
+
+	def test_Parse_TodoTextInFront_ParsesTodoOnly(self):
+		inputs = [
+			'pick up groceries',
+			'pick up groceries !!1',
+			'pick up groceries p1',
+			'pick up groceries !!1 @errands',
+			'pick up groceries @on_the_go',
+			'pick up groceries !!1 @errands due:tomorrow note:check the grocery list note:check it twice',
+			'pick up groceries note: check the grocery list',
+			'pick up groceries #groceries',
+			'pick up groceries !!1 #groceries @errands due: tomorrow',
+			'pick up groceries !!1 #groceries @errands due: next week',
+			'pick up groceries !!1 #groceries @errands due: next week note: check the grocery list',
+			'pick up groceries !!1 #groceries @errands due: tomorrow note: check the grocery list',
+			'pick up groceries !!1 #groceries @errands note: check the grocery list',
+		]
+		for task in inputs:
+			parsed = self.parser.parse(task)
+			assert parsed['todo'] == 'pick up groceries'
+
+	def test_Parse_TodoTextBehindOthers_ParsesTodoOnly(self):
+		inputs = [
+			'!!1 pick up groceries',
+			'p1 pick up groceries',
+			'!!1 @errands pick up groceries',
+			'@on_the_go pick up groceries',
+			'!!1 pick up groceries @errands due:tomorrow note:check the grocery list note:check it twice',
+			'pick up groceries note: check the grocery list',
+			'#groceries pick up groceries',
+			'!!1 #groceries @errands pick up groceries due: tomorrow',
+			'!!1 #groceries @errands pick up groceries due: next week',
+			'!!1 #groceries @errands pick up groceries due: next week note: check the grocery list',
+			'!!1 #groceries @errands pick up groceries due: tomorrow note: check the grocery list',
+			'!!1 #groceries @errands pick up groceries note: check the grocery list',
+		]
+		for task in inputs:
+			parsed = self.parser.parse(task)
+			assert parsed['todo'] == 'pick up groceries'
