@@ -81,11 +81,30 @@ class TestParsingProject():
 		parsed = self.parser.parse(task)
 		assert parsed['project'] == 'shopping'
 
-	@pytest.mark.xfail(strict=True)
 	def test_Parse_MultiWordProject_ParsesCorrectly(self):
-		task = 'pick up groceries #grocery shopping !!3 @errands @grocery'
+		tasks = [
+			'pick up groceries #{grocery shopping} !!3 @errands @grocery',
+			'pick up groceries #(grocery shopping) !!3 @errands @grocery',
+			'pick up groceries #`grocery shopping` !!3 @errands @grocery',
+			'pick up groceries #"grocery shopping" !!3 @errands @grocery',
+			"pick up groceries #'grocery shopping' !!3 @errands @grocery",
+			]
+		for task in tasks:
+			parsed = self.parser.parse(task)
+			assert parsed['project'] == 'grocery shopping'
+
+	def test_Parse_NonAlpha_ParsesCorrectly(self):
+		task = 'pick up groceries #grocery_shopping !!3 @errands @grocery'
 		parsed = self.parser.parse(task)
-		assert parsed['project'] == 'grocery shopping'
+		assert parsed['project'] == 'grocery_shopping'
+
+		task = 'pick up groceries #grocery-shopping !!3 @errands @grocery'
+		parsed = self.parser.parse(task)
+		assert parsed['project'] == 'grocery-shopping'
+
+		task = 'pick up groceries #grocery_shopping2 !!3 @errands @grocery'
+		parsed = self.parser.parse(task)
+		assert parsed['project'] == 'grocery_shopping2'
 
 
 class TestParsingDueDate():

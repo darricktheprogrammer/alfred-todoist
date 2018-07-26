@@ -9,7 +9,7 @@ import re
 class TaskParser:
 	label_regex = r'(?<=@)\w+'
 	priority_regex = r'(?P<prefix>!!|p)(?P<priority>[1234])'
-	project_regex = r'(?<=#)\w+'
+	project_regex = r'''#([`{\("'](?P<project_space>[\w ]+)[`}\)"']|(?P<project>[-\w]+))'''
 
 	def _pop_labels(self, text):
 		labels = [g for g in re.findall(self.label_regex, text)]
@@ -30,8 +30,11 @@ class TaskParser:
 	def _pop_project(self, text):
 		project = re.search(self.project_regex, text)
 		if project:
-			project_name = project.group()
-			text = text.replace('#' + project_name, '')
+			for groupname in ['project_space', 'project']:
+				if project.group(groupname):
+					project_name = project.group(groupname)
+
+			text = re.sub(self.project_regex, '', text)
 		else:
 			project_name = ''
 		return project_name, text
