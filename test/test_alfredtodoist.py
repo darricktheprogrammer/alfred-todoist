@@ -131,3 +131,13 @@ class TestParsingDueDate():
 		parsed = self.parser.parse(task)
 		assert parsed['due'] == 'next week'
 		assert parsed['labels'] == ['errands']
+
+	def test_Parse_WithNoteAfter_ParsesDueDate(self):
+		task = 'pick up groceries due: next week note: go to the new place'
+		parsed = self.parser.parse(task)
+		assert parsed['due'] == 'next week'
+
+	def test_Parse_WithNoteBefore_ParsesDueDate(self):
+		task = 'pick up groceries note: go to the new place due: next week'
+		parsed = self.parser.parse(task)
+		assert parsed['due'] == 'next week'

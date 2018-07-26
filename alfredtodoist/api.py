@@ -37,14 +37,13 @@ class TaskParser:
 		return project_name, text
 
 	def _pop_due_date(self, text):
-		try:
-			due_index = text.index('due:')
-			start = due_index + len('due:')
-			due_date = text[start:].strip()
-			text = text.replace('due:' + due_date, '')
-		except ValueError:
-			due_date = ''
-		return due_date, text
+		if 'due:' not in text:
+			return '', text
+		# if `note:` follows `due:`, get all of the text up until then. If
+		# there is no note, this just gets the entire string after `due:`.
+		due_text = text.split('due:')[1]
+		due_text = due_text.split('note:')[0]
+		return due_text.strip(), text.replace('due:' + due_text, '')
 
 	def parse(self, text):
 		labels, text = self._pop_labels(text)
