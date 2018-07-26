@@ -1,12 +1,13 @@
 """
-Docstring for main module in AlfredTodoist.
-
-A longer description...
+Parsing for Todos.
 """
 import re
 
 
 class TaskParser:
+	"""
+	For parsing a string of todo text into its various parts.
+	"""
 	label_regex = r'(?<=@)\w+'
 	priority_regex = r'(?P<prefix>!!|p)(?P<priority>[1234])'
 	project_regex = r'''#([`{\("'](?P<project_space>[\w ]+)[`}\)"']|(?P<project>[-\w]+))'''
@@ -59,6 +60,50 @@ class TaskParser:
 		return notes, text
 
 	def parse(self, text):
+		"""
+		Parse the todo text
+
+		Extracts the following components:
+			labels: `@label`
+			priority: `!!1`, `p3`
+			project: `#project`
+			due date: `due: tomorrow`
+			notes: `note: this is a note`
+			todo: Anything left over after the other properties have been parsed
+
+		* The todo must come before any notes or due date.
+		* You can have as many separate notes as you want.
+		* multi-word projects can be delimited by any of the following:
+			* #{grocery shopping}
+			* #(grocery shopping)
+			* #`grocery shopping`
+			* #"grocery shopping"
+			* #'grocery shopping'
+
+		Example:
+			TaskParser.parse('get milk !!3 #{grocery shopping} @errands @grocery_store due: tomorrow note: get whole milk note: check the expiration date')
+			{
+				'labels': [@errands, @grocery_store],
+				'priority': '3',
+				'project': 'grocery shopping',
+				'due': 'tomorrow',
+				'notes': ['get whole milk', 'check the expiration date'],
+				'todo': 'get milk'
+			}
+		Args:
+			text (string): The text to parse
+		Returns:
+			dict
+
+			{
+				'labels': list,
+				'priority': str,
+				'project': str,
+				'due': str,
+				'notes': list,
+				'todo': str
+			}
+		"""
 		# Parse the todo in order from more rigidly defined specs to more
 		# free-flowing text. `TaskParser` does rely somewhat on the order of
 		# parsing. By popping things like labels and priority out of the text,
