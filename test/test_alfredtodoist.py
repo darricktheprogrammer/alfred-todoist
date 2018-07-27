@@ -2,12 +2,12 @@
 # -*- coding: utf-8 -*-
 import pytest
 
-from alfredtodoist import api
+from alfredtodoist.parse import TaskParser
 
 
 class TestParsingLabels():
 	def setup_method(self):
-		self.parser = api.TaskParser()
+		self.parser = TaskParser()
 
 	def test_Parse_GivenSingleLabel_ReturnsSingleLabel(self):
 		task = 'pick up groceries @errands'
@@ -44,7 +44,7 @@ class TestParsingLabels():
 
 class TestParsingPriority():
 	def setup_method(self):
-		self.parser = api.TaskParser()
+		self.parser = TaskParser()
 
 	def test_Parse_ExclamationPointPriorityFormat_ParsesNumber(self):
 		task = 'pick up groceries !!1'
@@ -64,7 +64,7 @@ class TestParsingPriority():
 
 class TestParsingProject():
 	def setup_method(self):
-		self.parser = api.TaskParser()
+		self.parser = TaskParser()
 
 	def test_Parse_WithOnlyProject_ParsesProject(self):
 		task = 'pick up groceries #shopping'
@@ -109,7 +109,7 @@ class TestParsingProject():
 
 class TestParsingDueDate():
 	def setup_method(self):
-		self.parser = api.TaskParser()
+		self.parser = TaskParser()
 
 	def test_Parse_WithOnlyDueDate_ParsesDueDate(self):
 		task = 'pick up groceries due:tonight'
@@ -145,7 +145,7 @@ class TestParsingDueDate():
 
 class TestParsingNotes():
 	def setup_method(self):
-		self.parser = api.TaskParser()
+		self.parser = TaskParser()
 
 	def test_Parse_WithoutNote_ReturnsEmptyList(self):
 		task = '# pick up groceries !!1 #groceries @errands'
@@ -175,7 +175,7 @@ class TestParsingNotes():
 
 class TestTodoTextParsing():
 	def setup_method(self):
-		self.parser = api.TaskParser()
+		self.parser = TaskParser()
 
 	def test_Parse_TodoTextInFront_ParsesTodoOnly(self):
 		inputs = [
