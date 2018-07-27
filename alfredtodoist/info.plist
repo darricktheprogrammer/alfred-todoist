@@ -3,24 +3,126 @@
 <plist version="1.0">
 <dict>
 	<key>bundleid</key>
-	<string></string>
+	<string>com.exitcodeone.alfred-todoist</string>
+	<key>category</key>
+	<string>Productivity</string>
 	<key>connections</key>
-	<dict/>
+	<dict>
+		<key>3857F47E-04BC-4A7A-B53B-F7D19BD92792</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>FC1637AA-645B-418B-86B2-36D14284C975</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+	</dict>
 	<key>createdby</key>
-	<string></string>
+	<string>Darrick Herwehe</string>
 	<key>description</key>
-	<string></string>
+	<string>Quickly add a new task to Todoist</string>
 	<key>disabled</key>
 	<false/>
 	<key>name</key>
 	<string>alfred-todoist</string>
 	<key>objects</key>
-	<array/>
+	<array>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>concurrently</key>
+				<false/>
+				<key>escaping</key>
+				<integer>111</integer>
+				<key>script</key>
+				<string>python addtask.py {query}</string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>type</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>FC1637AA-645B-418B-86B2-36D14284C975</string>
+			<key>version</key>
+			<integer>2</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>alfredfiltersresults</key>
+				<false/>
+				<key>alfredfiltersresultsmatchmode</key>
+				<integer>0</integer>
+				<key>argumenttrimmode</key>
+				<integer>0</integer>
+				<key>argumenttype</key>
+				<integer>0</integer>
+				<key>escaping</key>
+				<integer>111</integer>
+				<key>keyword</key>
+				<string>todo</string>
+				<key>queuedelaycustom</key>
+				<integer>3</integer>
+				<key>queuedelayimmediatelyinitially</key>
+				<true/>
+				<key>queuedelaymode</key>
+				<integer>0</integer>
+				<key>queuemode</key>
+				<integer>1</integer>
+				<key>runningsubtext</key>
+				<string></string>
+				<key>script</key>
+				<string>python feedback.py {query}</string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>subtext</key>
+				<string></string>
+				<key>title</key>
+				<string>Add to Todoist</string>
+				<key>type</key>
+				<integer>0</integer>
+				<key>withspace</key>
+				<true/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.scriptfilter</string>
+			<key>uid</key>
+			<string>3857F47E-04BC-4A7A-B53B-F7D19BD92792</string>
+			<key>version</key>
+			<integer>2</integer>
+		</dict>
+	</array>
 	<key>readme</key>
 	<string></string>
 	<key>uidata</key>
-	<dict/>
+	<dict>
+		<key>3857F47E-04BC-4A7A-B53B-F7D19BD92792</key>
+		<dict>
+			<key>xpos</key>
+			<integer>200</integer>
+			<key>ypos</key>
+			<integer>40</integer>
+		</dict>
+		<key>FC1637AA-645B-418B-86B2-36D14284C975</key>
+		<dict>
+			<key>xpos</key>
+			<integer>460</integer>
+			<key>ypos</key>
+			<integer>40</integer>
+		</dict>
+	</dict>
 	<key>webaddress</key>
-	<string></string>
+	<string>http://exitcodeone.com</string>
 </dict>
 </plist>

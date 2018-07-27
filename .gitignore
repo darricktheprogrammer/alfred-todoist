@@ -53,3 +53,6 @@ var/
 *.sublime*
 # pytest
 .pytest_cache/
+
+
+.alfredversionchecked
