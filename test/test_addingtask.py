@@ -2,7 +2,10 @@
 # -*- coding: utf-8 -*-
 import pytest
 
-from alfredtodoist.addtask import label_ids_from_names
+from alfredtodoist.addtask import (
+	INBOX_ID,
+	label_ids_from_names, project_id_from_name
+	)
 
 
 @pytest.fixture
@@ -17,6 +20,16 @@ def TodoistAccount():
 				{
 					'id': 2,
 					'name': 'shopping'
+				}
+			],
+			'projects': [
+				{
+					'id': 1,
+					'name': 'plan birthday party'
+				},
+				{
+					'id': 2,
+					'name': 'hang shelves'
 				}
 			]
 		}
@@ -46,3 +59,18 @@ class TestGettingLabelIDs():
 		ids = label_ids_from_names(['grocery', 'errands'], TodoistAccount())
 		assert len(ids) == 1
 		assert ids[0] == 1
+
+
+@pytest.mark.usefixtures("TodoistAccount")
+class TestGettingProjectID():
+	def test_ProjectIdFromName_GivenExistingProject_ReturnsProjectId(self):
+		proj_id = project_id_from_name('plan birthday party', TodoistAccount())
+		assert proj_id == 1
+
+	def test_ProjectIdFromName_GivenNonExistingProject_ReturnsInboxId(self):
+		proj_id = project_id_from_name('no', TodoistAccount())
+		assert proj_id == INBOX_ID
+
+	def test_ProjectIdFromName_GivenEmptyProjectName_ReturnsInboxId(self):
+		proj_id = project_id_from_name('', TodoistAccount())
+		assert proj_id == INBOX_ID
