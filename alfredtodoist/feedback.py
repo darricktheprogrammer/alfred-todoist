@@ -35,7 +35,9 @@ def main(wf):
 	feedback = msg.format(msg, **task)
 	wf.logger.debug('parsed message: ' + feedback)
 	wf.add_item(title='Add task: ' + todo,
-		subtitle=feedback)
+		subtitle=feedback,
+		arg=task_text,
+		valid=True)
 	wf.send_feedback()
 
 
