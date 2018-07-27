@@ -148,27 +148,27 @@ class TestParsingNotes():
 		self.parser = TaskParser()
 
 	def test_Parse_WithoutNote_ReturnsEmptyList(self):
-		task = '# pick up groceries !!1 #groceries @errands'
+		task = 'pick up groceries !!1 #groceries @errands'
 		parsed = self.parser.parse(task)
 		assert parsed['notes'] == []
 
 	def test_Parse_SingleNote_ParsesNote(self):
-		task = '# pick up groceries !!1 #groceries @errands note: check the grocery list'
+		task = 'pick up groceries !!1 #groceries @errands note: check the grocery list'
 		parsed = self.parser.parse(task)
 		assert parsed['notes'] == ['check the grocery list']
 
 	def test_Parse_WithMultipleNotes_ParsesNotes(self):
-		task = '# pick up groceries !!1 #groceries @errands note: check the grocery list note: check it again'
+		task = 'pick up groceries !!1 #groceries @errands note: check the grocery list note: check it again'
 		parsed = self.parser.parse(task)
 		assert parsed['notes'] == ['check the grocery list', 'check it again']
 
 	def test_Parse_WithDueDateBefore_ParsesNotes(self):
-		task = '# pick up groceries !!1 #groceries @errands due: next week note: check the grocery list note: check it again'
+		task = 'pick up groceries !!1 #groceries @errands due: next week note: check the grocery list note: check it again'
 		parsed = self.parser.parse(task)
 		assert parsed['notes'] == ['check the grocery list', 'check it again']
 
 	def test_Parse_WithDueDateAfter_ParsesNotes(self):
-		task = '# pick up groceries !!1 #groceries @errands note: check the grocery list note: check it again due: next week'
+		task = 'pick up groceries !!1 #groceries @errands note: check the grocery list note: check it again due: next week'
 		parsed = self.parser.parse(task)
 		assert parsed['notes'] == ['check the grocery list', 'check it again']
 
