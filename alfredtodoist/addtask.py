@@ -7,7 +7,12 @@ This is the script that alfred will actually run.
 import sys
 from workflow import Workflow3
 
-from alfredtodoist.parse import TaskParser
+from parse import TaskParser
+
+
+def label_ids_from_names(label_names, api):
+	labels = api.state['labels']
+	return [label['id'] for label in labels if label['name'] in label_names]
 
 
 def main(wf):
