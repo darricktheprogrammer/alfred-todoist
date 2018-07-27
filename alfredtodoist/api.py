@@ -56,7 +56,7 @@ class TaskParser:
 		notes = []
 		for fragment in note_fragments[1:]:
 			notes.append(fragment.strip())
-			text = text.replace('note:' + fragment, '')
+			text = note_fragments[0].strip()
 		return notes, text
 
 	def parse(self, text):
