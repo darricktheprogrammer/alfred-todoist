@@ -185,5 +185,6 @@ class TestApiCalls():
 		api = TodoistAccount()
 		api.items.add.return_value = {'id': 1}
 		create_task('test todo', 0, api)
+		api.items.add.assert_called()
 		api.notes.add.assert_not_called()
 		api.commit.assert_not_called()
