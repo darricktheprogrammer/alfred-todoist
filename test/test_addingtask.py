@@ -1,17 +1,19 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+from mock import Mock
+
 import pytest
 
 from alfredtodoist.addtask import (
 	INBOX_ID,
 	label_ids_from_names, project_id_from_name, convert_priority,
-	should_sync_upfront
+	build_api_payload
 	)
 
 
 @pytest.fixture
 def TodoistAccount():
-	class APIMock:
+	class APIMock(Mock):
 		state = {
 			'labels': [
 				{
@@ -35,6 +37,16 @@ def TodoistAccount():
 			]
 		}
 	return APIMock()
+
+
+@pytest.fixture
+def DummyTask():
+	return {
+		'labels': [],
+		'project': '',
+		'priority': 1,
+		'due': ''
+	}
 
 
 @pytest.mark.usefixtures("TodoistAccount")
@@ -98,20 +110,31 @@ class TestPriorityConversion():
 		assert convert_priority(0) == 1
 
 
-@pytest.mark.usefixtures("TodoistAccount")
+@pytest.mark.usefixtures("TodoistAccount", "DummyTask")
 class TestApiCalls():
-	def test_ShouldSyncUpfront_NoLabelsOrProjects_ShouldNotSync(self):
-		task = {'labels': [], 'project': ''}
-		assert should_sync_upfront(task) is False
+	def test_BuildApiPayload_NoLabelsOrProjects_DoesNotSync(self):
+		api = TodoistAccount()
+		task = DummyTask()
+		build_api_payload(task, api)
+		api.sync.assert_not_called()
 
-	def test_ShouldSyncUpfront_LabelsButNoProjects_ShouldSync(self):
-		task = {'labels': ['errands'], 'project': ''}
-		assert should_sync_upfront(task) is True
+	def test_BuildApiPayload_LabelsButNoProjects_ShouldSync(self):
+		api = TodoistAccount()
+		task = DummyTask()
+		task.update({'labels': ['errands']})
+		build_api_payload(task, api)
+		api.sync.assert_called()
 
-	def test_ShouldSyncUpfront_ProjectButNoLabels_ShouldSync(self):
-		task = {'labels': [], 'project': 'a project'}
-		assert should_sync_upfront(task) is True
+	def test_BuildApiPayload_ProjectButNoLabels_ShouldSync(self):
+		api = TodoistAccount()
+		task = DummyTask()
+		task.update({'project': 'a project'})
+		build_api_payload(task, api)
+		api.sync.assert_called()
 
-	def test_ShouldSyncUpfront_BothProjectAndLabels_ShouldSync(self):
-		task = {'labels': ['errands'], 'project': 'a project'}
-		assert should_sync_upfront(task) is True
+	def test_BuildApiPayload_BothProjectAndLabels_ShouldSync(self):
+		api = TodoistAccount()
+		task = DummyTask()
+		task.update({'labels': ['errands'], 'project': 'a project'})
+		build_api_payload(task, api)
+		api.sync.assert_called()

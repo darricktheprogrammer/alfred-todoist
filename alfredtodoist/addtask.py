@@ -50,6 +50,22 @@ def should_sync_upfront(task):
 	return bool(task['labels'] or task['project'])
 
 
+def build_api_payload(task, api):
+	if should_sync_upfront(task):
+		api.sync()
+		label_ids = label_ids_from_names(task['labels'], api)
+		project_id = project_id_from_name(task['project'], api)
+	else:
+		label_ids = []
+		project_id = INBOX_ID
+	return {
+		'labels': label_ids,
+		'project': project_id,
+		'priority': task['priority'],
+		'date_string': task['due']
+	}
+
+
 def main(wf):
 	import todoist
 	args = wf.args
