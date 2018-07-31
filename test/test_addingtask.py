@@ -7,7 +7,7 @@ import pytest
 from alfredtodoist.addtask import (
 	INBOX_ID,
 	label_ids_from_names, project_id_from_name, convert_priority,
-	build_api_payload
+	build_api_payload, create_task
 	)
 
 
@@ -138,3 +138,19 @@ class TestApiCalls():
 		task.update({'labels': ['errands'], 'project': 'a project'})
 		build_api_payload(task, api)
 		api.sync.assert_called()
+
+	def test_CreateTask_GivenNoPayload_CallsApiWithEmptyPayload(self):
+		api = TodoistAccount()
+		create_task('test todo', 0, api)
+		api.items.add.assert_called_with('test todo', 0)
+
+	def test_CreateTask_GivenPayload_CallsApiWithPayload(self):
+		api = TodoistAccount()
+		payload = {
+			'labels': [1],
+			'priority': 1,
+			'date_string': ''
+		}
+		create_task('test todo', 0, api, additional_properties=payload)
+		api.items.add.assert_called_with('test todo', 0,
+			labels=[1], priority=1, date_string='')

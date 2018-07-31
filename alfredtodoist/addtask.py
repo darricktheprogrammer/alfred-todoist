@@ -66,6 +66,12 @@ def build_api_payload(task, api):
 	}
 
 
+def create_task(task_text, project_id, api, additional_properties=None):
+	if additional_properties is None:
+		additional_properties = {}
+	api.items.add(task_text, project_id, **additional_properties)
+
+
 def main(wf):
 	import todoist
 	args = wf.args
