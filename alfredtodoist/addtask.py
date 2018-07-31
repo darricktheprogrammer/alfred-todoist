@@ -52,6 +52,7 @@ def should_sync_upfront(task):
 
 def build_api_payload(task, api):
 	if should_sync_upfront(task):
+		# don't bother making upfront api calls if we don't need existing IDs.
 		api.sync()
 		label_ids = label_ids_from_names(task['labels'], api)
 		project_id = project_id_from_name(task['project'], api)
@@ -61,7 +62,7 @@ def build_api_payload(task, api):
 	return {
 		'labels': label_ids,
 		'project': project_id,
-		'priority': task['priority'],
+		'priority': convert_priority(task['priority']),
 		'date_string': task['due']
 	}
 
@@ -71,7 +72,8 @@ def create_task(task_text, project_id, api,
 	if additional_properties is None:
 		additional_properties = {}
 	task = api.items.add(task_text, project_id, **additional_properties)
-	if notes is not None:
+	api.commit()
+	if notes:
 		for note in notes:
 			api.notes.add(task['id'], note)
 		api.commit()
@@ -79,10 +81,20 @@ def create_task(task_text, project_id, api,
 
 def main(wf):
 	import todoist
-	args = wf.args
+
+	wf.logger.info("parsing task: '{}'".format(wf.args[0]))
+	task = TaskParser().parse(wf.args[0])
+	api = todoist.TodoistAPI('')
+	payload = build_api_payload(task, api)
+	project_id = payload.pop('project')
+
+	wf.logger.debug("task: {}".format(repr(task['todo'])))
+	wf.logger.debug("project id: {}".format(repr(project_id)))
+	wf.logger.debug("args: {}".format(repr(payload)))
+	create_task(task['todo'], project_id, api,
+				additional_properties=payload, notes=task['notes'])
 
 
 if __name__ == '__main__':
 	wf = Workflow3(libraries=['./lib'])
-	log = wf.logger
 	sys.exit(wf.run(main))
