@@ -4,7 +4,8 @@ import pytest
 
 from alfredtodoist.addtask import (
 	INBOX_ID,
-	label_ids_from_names, project_id_from_name, convert_priority
+	label_ids_from_names, project_id_from_name, convert_priority,
+	should_sync_upfront
 	)
 
 
@@ -95,3 +96,22 @@ class TestPriorityConversion():
 
 	def test_ConvertPriority_Given0_DefaultsToNoPriority(self):
 		assert convert_priority(0) == 1
+
+
+@pytest.mark.usefixtures("TodoistAccount")
+class TestApiCalls():
+	def test_ShouldSyncUpfront_NoLabelsOrProjects_ShouldNotSync(self):
+		task = {'labels': [], 'project': ''}
+		assert should_sync_upfront(task) is False
+
+	def test_ShouldSyncUpfront_LabelsButNoProjects_ShouldSync(self):
+		task = {'labels': ['errands'], 'project': ''}
+		assert should_sync_upfront(task) is True
+
+	def test_ShouldSyncUpfront_ProjectButNoLabels_ShouldSync(self):
+		task = {'labels': [], 'project': 'a project'}
+		assert should_sync_upfront(task) is True
+
+	def test_ShouldSyncUpfront_BothProjectAndLabels_ShouldSync(self):
+		task = {'labels': ['errands'], 'project': 'a project'}
+		assert should_sync_upfront(task) is True

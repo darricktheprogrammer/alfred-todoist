@@ -46,6 +46,10 @@ def convert_priority(priority):
 		return 1
 
 
+def should_sync_upfront(task):
+	return bool(task['labels'] or task['project'])
+
+
 def main(wf):
 	import todoist
 	args = wf.args
