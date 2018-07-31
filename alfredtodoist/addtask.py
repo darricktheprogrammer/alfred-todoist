@@ -66,10 +66,15 @@ def build_api_payload(task, api):
 	}
 
 
-def create_task(task_text, project_id, api, additional_properties=None):
+def create_task(task_text, project_id, api,
+				additional_properties=None, notes=None):
 	if additional_properties is None:
 		additional_properties = {}
-	api.items.add(task_text, project_id, **additional_properties)
+	task = api.items.add(task_text, project_id, **additional_properties)
+	if notes is not None:
+		for note in notes:
+			api.notes.add(task['id'], note)
+		api.commit()
 
 
 def main(wf):

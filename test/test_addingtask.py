@@ -154,3 +154,26 @@ class TestApiCalls():
 		create_task('test todo', 0, api, additional_properties=payload)
 		api.items.add.assert_called_with('test todo', 0,
 			labels=[1], priority=1, date_string='')
+
+	def test_CreateTask_GivenSingleNote_AddsNoteAfterCreatingTask(self):
+		api = TodoistAccount()
+		api.items.add.return_value = {'id': 1}
+		create_task('test todo', 0, api, notes=['a note'])
+		api.notes.add.assert_called_with(1, 'a note')
+		api.commit.assert_called()
+
+	def test_CreateTask_GivenMultipleNotes_AddsMultipleNotesAfterCreatingTask(self):
+		api = TodoistAccount()
+		api.items.add.return_value = {'id': 1}
+		create_task('test todo', 0, api, notes=['a note', 'second note'])
+		api.notes.add.assert_any_call(1, 'a note')
+		api.notes.add.assert_any_call(1, 'second note')
+		assert api.notes.add.call_count == 2
+		api.commit.assert_called()
+
+	def test_CreateTask_GivenNoNotes_DoesntAddNotes(self):
+		api = TodoistAccount()
+		api.items.add.return_value = {'id': 1}
+		create_task('test todo', 0, api)
+		api.notes.add.assert_not_called()
+		api.commit.assert_not_called()
