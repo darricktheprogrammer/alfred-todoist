@@ -13,30 +13,7 @@ from alfredtodoist.addtask import (
 
 @pytest.fixture
 def TodoistAccount():
-	class APIMock(Mock):
-		state = {
-			'labels': [
-				{
-					'id': 1,
-					'name': 'errands'
-				},
-				{
-					'id': 2,
-					'name': 'shopping'
-				}
-			],
-			'projects': [
-				{
-					'id': 1,
-					'name': 'plan birthday party'
-				},
-				{
-					'id': 2,
-					'name': 'hang shelves'
-				}
-			]
-		}
-	return APIMock()
+	return Mock()
 
 
 @pytest.fixture
@@ -49,43 +26,73 @@ def DummyTask():
 	}
 
 
-@pytest.mark.usefixtures("TodoistAccount")
+@pytest.fixture
+def existing_labels():
+	return [
+		{'id': 1, 'name': 'errands'},
+		{'id': 2, 'name': 'shopping'}
+	]
+
+
+@pytest.fixture
+def existing_projects():
+	return [
+		{'id': 1, 'name': 'plan birthday party'},
+		{'id': 2, 'name': 'hang shelves'}
+	]
+
+
+@pytest.mark.usefixtures("TodoistAccount", "existing_labels")
 class TestGettingLabelIDs():
 	def test_LabelIdsFromNames_GivenSingleExistingLabel_ReturnsSingleId(self):
-		ids = label_ids_from_names(['errands'], TodoistAccount())
+		api = TodoistAccount()
+		api.state = {'labels': existing_labels()}
+		ids = label_ids_from_names(['errands'], api)
 		assert len(ids) == 1
 		assert ids[0] == 1
 
 	def test_LabelIdsFromNames_GivenMultipleExistingLabels_ReturnsAllIds(self):
-		ids = label_ids_from_names(['errands', 'shopping'], TodoistAccount())
+		api = TodoistAccount()
+		api.state = {'labels': existing_labels()}
+		ids = label_ids_from_names(['errands', 'shopping'], api)
 		assert len(ids) == 2
 		assert ids == [1, 2]
 
 	def test_LabelIdsFromNames_GivenNoLabels_ReturnsEmptyList(self):
-		ids = label_ids_from_names([], TodoistAccount())
+		api = TodoistAccount()
+		api.state = {'labels': existing_labels()}
+		ids = label_ids_from_names([], api)
 		assert len(ids) == 0
 
 	def test_LabelIdsFromNames_GivenNonExistentLabel_IgnoresLabel(self):
-		ids = label_ids_from_names(['grocery'], TodoistAccount())
+		api = TodoistAccount()
+		api.state = {'labels': existing_labels()}
+		ids = label_ids_from_names(['grocery'], api)
 		assert len(ids) == 0
 		# Make sure it still grabs any that exist
-		ids = label_ids_from_names(['grocery', 'errands'], TodoistAccount())
+		ids = label_ids_from_names(['grocery', 'errands'], api)
 		assert len(ids) == 1
 		assert ids[0] == 1
 
 
-@pytest.mark.usefixtures("TodoistAccount")
+@pytest.mark.usefixtures("TodoistAccount", "existing_projects")
 class TestGettingProjectID():
 	def test_ProjectIdFromName_GivenExistingProject_ReturnsProjectId(self):
-		proj_id = project_id_from_name('plan birthday party', TodoistAccount())
+		api = TodoistAccount()
+		api.state = {'projects': existing_projects()}
+		proj_id = project_id_from_name('plan birthday party', api)
 		assert proj_id == 1
 
 	def test_ProjectIdFromName_GivenNonExistingProject_ReturnsInboxId(self):
-		proj_id = project_id_from_name('no', TodoistAccount())
+		api = TodoistAccount()
+		api.state = {'projects': existing_projects()}
+		proj_id = project_id_from_name('no', api)
 		assert proj_id == INBOX_ID
 
 	def test_ProjectIdFromName_GivenEmptyProjectName_ReturnsInboxId(self):
-		proj_id = project_id_from_name('', TodoistAccount())
+		api = TodoistAccount()
+		api.state = {'projects': existing_projects()}
+		proj_id = project_id_from_name('', api)
 		assert proj_id == INBOX_ID
 
 
@@ -110,7 +117,7 @@ class TestPriorityConversion():
 		assert convert_priority(0) == 1
 
 
-@pytest.mark.usefixtures("TodoistAccount", "DummyTask")
+@pytest.mark.usefixtures("TodoistAccount", "DummyTask", "existing_labels", "existing_projects")
 class TestApiCalls():
 	def test_BuildApiPayload_NoLabelsOrProjects_DoesNotSync(self):
 		api = TodoistAccount()
@@ -120,6 +127,7 @@ class TestApiCalls():
 
 	def test_BuildApiPayload_LabelsButNoProjects_ShouldSync(self):
 		api = TodoistAccount()
+		api.state = {'labels': existing_labels(), 'projects': []}
 		task = DummyTask()
 		task.update({'labels': ['errands']})
 		build_api_payload(task, api)
@@ -127,6 +135,7 @@ class TestApiCalls():
 
 	def test_BuildApiPayload_ProjectButNoLabels_ShouldSync(self):
 		api = TodoistAccount()
+		api.state = {'labels': [], 'projects': existing_projects()}
 		task = DummyTask()
 		task.update({'project': 'a project'})
 		build_api_payload(task, api)
@@ -134,6 +143,7 @@ class TestApiCalls():
 
 	def test_BuildApiPayload_BothProjectAndLabels_ShouldSync(self):
 		api = TodoistAccount()
+		api.state = {'labels': existing_labels(), 'projects': existing_projects()}
 		task = DummyTask()
 		task.update({'labels': ['errands'], 'project': 'a project'})
 		build_api_payload(task, api)
