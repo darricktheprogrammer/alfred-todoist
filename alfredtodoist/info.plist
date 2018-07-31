@@ -8,6 +8,19 @@
 	<string>Productivity</string>
 	<key>connections</key>
 	<dict>
+		<key>1D35AB0E-FCAA-45A6-BAB0-2E2D93CF7CBF</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>6522580E-6FF5-414E-8E10-1030129AD831</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
 		<key>3857F47E-04BC-4A7A-B53B-F7D19BD92792</key>
 		<array>
 			<dict>
@@ -32,29 +45,6 @@
 	<string>alfred-todoist</string>
 	<key>objects</key>
 	<array>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>concurrently</key>
-				<false/>
-				<key>escaping</key>
-				<integer>111</integer>
-				<key>script</key>
-				<string>python addtask.py {query}</string>
-				<key>scriptargtype</key>
-				<integer>0</integer>
-				<key>scriptfile</key>
-				<string></string>
-				<key>type</key>
-				<integer>0</integer>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.action.script</string>
-			<key>uid</key>
-			<string>FC1637AA-645B-418B-86B2-36D14284C975</string>
-			<key>version</key>
-			<integer>2</integer>
-		</dict>
 		<dict>
 			<key>config</key>
 			<dict>
@@ -102,17 +92,98 @@
 			<key>version</key>
 			<integer>2</integer>
 		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>concurrently</key>
+				<false/>
+				<key>escaping</key>
+				<integer>111</integer>
+				<key>script</key>
+				<string>python addtask.py {query}</string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>type</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>FC1637AA-645B-418B-86B2-36D14284C975</string>
+			<key>version</key>
+			<integer>2</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>concurrently</key>
+				<false/>
+				<key>escaping</key>
+				<integer>110</integer>
+				<key>script</key>
+				<string>python setkey.py {query}</string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>type</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>6522580E-6FF5-414E-8E10-1030129AD831</string>
+			<key>version</key>
+			<integer>2</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argumenttype</key>
+				<integer>0</integer>
+				<key>keyword</key>
+				<string>todo:setkey</string>
+				<key>subtext</key>
+				<string></string>
+				<key>text</key>
+				<string>Set your Todoist API key</string>
+				<key>withspace</key>
+				<true/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.keyword</string>
+			<key>uid</key>
+			<string>1D35AB0E-FCAA-45A6-BAB0-2E2D93CF7CBF</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
 	</array>
 	<key>readme</key>
 	<string></string>
 	<key>uidata</key>
 	<dict>
+		<key>1D35AB0E-FCAA-45A6-BAB0-2E2D93CF7CBF</key>
+		<dict>
+			<key>xpos</key>
+			<integer>200</integer>
+			<key>ypos</key>
+			<integer>200</integer>
+		</dict>
 		<key>3857F47E-04BC-4A7A-B53B-F7D19BD92792</key>
 		<dict>
 			<key>xpos</key>
 			<integer>200</integer>
 			<key>ypos</key>
 			<integer>40</integer>
+		</dict>
+		<key>6522580E-6FF5-414E-8E10-1030129AD831</key>
+		<dict>
+			<key>xpos</key>
+			<integer>460</integer>
+			<key>ypos</key>
+			<integer>200</integer>
 		</dict>
 		<key>FC1637AA-645B-418B-86B2-36D14284C975</key>
 		<dict>
