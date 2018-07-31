@@ -26,6 +26,26 @@ def project_id_from_name(project_name, api):
 	return INBOX_ID
 
 
+def convert_priority(priority):
+	"""
+	Flips the priority from the interface version to the api version
+
+	In the user interface, 1 is most important and 4 is least important.
+	In the api, 4 is most important, and 1 is least important.
+
+	Args:
+		priority (int): The user inputted priority
+	Returns:
+		int
+
+		The API version of the priority.
+	"""
+	try:
+		return [4, 3, 2, 1][priority - 1]
+	except (IndexError, TypeError):
+		return 1
+
+
 def main(wf):
 	import todoist
 	args = wf.args

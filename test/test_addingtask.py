@@ -4,7 +4,7 @@ import pytest
 
 from alfredtodoist.addtask import (
 	INBOX_ID,
-	label_ids_from_names, project_id_from_name
+	label_ids_from_names, project_id_from_name, convert_priority
 	)
 
 
@@ -74,3 +74,24 @@ class TestGettingProjectID():
 	def test_ProjectIdFromName_GivenEmptyProjectName_ReturnsInboxId(self):
 		proj_id = project_id_from_name('', TodoistAccount())
 		assert proj_id == INBOX_ID
+
+
+@pytest.mark.usefixtures("TodoistAccount")
+class TestPriorityConversion():
+	def test_ConvertPriority_GivenUiValues_ReturnsApiValues(self):
+		assert convert_priority(1) == 4
+		assert convert_priority(2) == 3
+		assert convert_priority(3) == 2
+		assert convert_priority(4) == 1
+
+	def test_ConvertPriority_Given4_Returns1(self):
+		assert convert_priority(4) == 1
+
+	def test_ConvertPriority_GivenOutOfRange_DefaultsToNoPriority(self):
+		assert convert_priority(5) == 1
+
+	def test_ConvertPriority_GivenString_DefaultsToNoPriority(self):
+		assert convert_priority('4') == 1
+
+	def test_ConvertPriority_Given0_DefaultsToNoPriority(self):
+		assert convert_priority(0) == 1
