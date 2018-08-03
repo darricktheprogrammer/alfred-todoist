@@ -1,8 +1,9 @@
 #!/usr/bin/env python
 """
-Command line entry point into AlfredTodoist.
+The main actor in alfred-todoist.
 
-This is the script that alfred will actually run.
+This script takes the given input, parses it out, and sends it to Todoist
+using the user's api key.
 """
 import sys
 from workflow import Workflow3

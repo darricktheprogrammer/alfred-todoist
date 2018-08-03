@@ -1,8 +1,9 @@
 #!/usr/bin/env python
 """
-Command line entry point into AlfredTodoist.
+Give the user immediate feedback to how what they are typing is received.
 
-This is the script that alfred will actually run.
+This script parses out the user's input and provides it back in an easy
+to read manner.
 """
 import sys
 from workflow import Workflow3, PasswordNotFound

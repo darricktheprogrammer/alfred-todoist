@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 """
-Set the user's Todoist api key
+Save the user's Todoist api key in the keychain.
 """
 import sys
 from workflow import Workflow3

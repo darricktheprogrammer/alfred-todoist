@@ -90,6 +90,7 @@ class TaskParser:
 				'notes': ['get whole milk', 'check the expiration date'],
 				'todo': 'get milk'
 			}
+
 		Args:
 			text (string): The text to parse
 		Returns:
