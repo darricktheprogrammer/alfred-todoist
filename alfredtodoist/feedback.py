@@ -5,7 +5,7 @@ Command line entry point into AlfredTodoist.
 This is the script that alfred will actually run.
 """
 import sys
-from workflow import Workflow3
+from workflow import Workflow3, PasswordNotFound
 
 from parse import TaskParser
 
@@ -24,6 +24,17 @@ def transform_for_feedback(task):
 
 
 def main(wf):
+	# Ensure there is an API key set upfront. Don't bother providing any other
+	# feedback until that is done.
+	try:
+		wf.get_password('todoist')
+	except PasswordNotFound:
+		wf.add_item('Cannot find API key.',
+			'Use `todo:setkey <key>` to add your Todoist API key.',
+			valid=False)
+		wf.send_feedback()
+		return 0
+
 	task_text = wf.args[0]
 	wf.logger.info("parsing task: '{}'".format(task_text))
 	task = TaskParser().parse(task_text)

@@ -7,7 +7,7 @@ from workflow import Workflow3
 
 
 def main(wf):
-	pass
+	wf.save_password('todoist', wf.args[0])
 
 
 if __name__ == '__main__':

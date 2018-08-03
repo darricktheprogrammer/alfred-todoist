@@ -84,7 +84,8 @@ def main(wf):
 
 	wf.logger.info("parsing task: '{}'".format(wf.args[0]))
 	task = TaskParser().parse(wf.args[0])
-	api = todoist.TodoistAPI('')
+	api_key = wf.get_password('todoist')
+	api = todoist.TodoistAPI(api_key)
 	payload = build_api_payload(task, api)
 	project_id = payload.pop('project')
 
