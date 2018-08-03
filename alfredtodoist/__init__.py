@@ -7,4 +7,4 @@ docs for more information.
 
 __author__ = """Darrick Herwehe"""
 __email__ = 'darrick@exitcodeone.com'
-__version__ = '0.1.0'
+__version__ = '1.0.0'
