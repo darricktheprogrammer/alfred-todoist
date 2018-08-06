@@ -1,9 +1,10 @@
 """
-Placeholder text for short description
+A set of scripts for quickly adding tasks to Todoist using Alfred 3.
 
-Longer description...
+Quickly add tasks from Alfred, using Todoist's own syntax. See the README or
+docs for more information.
 """
 
 __author__ = """Darrick Herwehe"""
 __email__ = 'darrick@exitcodeone.com'
-__version__ = '0.1.0'
+__version__ = '1.0.0'

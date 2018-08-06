@@ -1,0 +1,6 @@
+# All packages should be installed in the `alfredtodoist` folder for better
+# portability. Alfred Workflow is is installed in the top level using the
+# command `pip install --target=. Alfred-Workflow`. All others are installed in
+# the `lib` folder (`--target=./lib`)
+Alfred-Workflow
+todoist-python
